@@ -46,20 +46,28 @@ class testChapter(unittest.TestCase):
 
     def test_unicode(self):
         chapter = self.__basic_chapter()
-        # Chapter without title attribute
-        chapter2 = Chapter()
 
         self.assertEqual(unicode(chapter), u'Tópicos avançados')
-        self.assertTrue(unicode(chapter2).startswith('<domain.Chapter'))
+
 
 
 class testBook(unittest.TestCase):
 
     def __basic_book(self):
-        attrs = {'title': u'Gödel, Escher, Bach: An Eternal Golden Braid'}
+        attrs = {'title': u'Gödel, Escher, Bach: An Eternal Golden Braid',
+                 'isbn': '978-0465026562',
+                 'publisher': 'Basic Books',
+                 }
         book = Book(**attrs)
 
         return book
+
+    def __basic_chapter(self):
+        chapter = Chapter()
+        chapter.title = u'Tópicos avançados'
+        chapter.title_translations['us_EN'] = 'Advanced Topics'
+
+        return chapter
 
     def test_basic(self):
         book = self.__basic_book()
@@ -68,9 +76,15 @@ class testBook(unittest.TestCase):
 
     def test_chapter(self):
         book = self.__basic_book()
-        chapter = Chapter()
-        chapter.title = u'Tópicos avançados'
-        chapter.title_translations['us_EN'] = 'Advanced Topics'
+        chapter = self.__basic_chapter()
+        book.chapters.append(chapter)
+
+        self.assertEqual(len(book.chapters), 1)
+
+    def test_duplicated_chapter(self):
+        book = self.__basic_book()
+        chapter = self.__basic_chapter()
+        book.chapters.append(chapter)
         book.chapters.append(chapter)
 
         self.assertEqual(len(book.chapters), 1)
