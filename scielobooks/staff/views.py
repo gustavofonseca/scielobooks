@@ -124,6 +124,18 @@ def edit_book(request):
 
         request.db.save_docs(parts, all_or_nothing=True)
 
+        #update evaluation data
+        evaluation = request.rel_db_session.query(rel_models.Evaluation).filter_by(monograph_sbid=monograph_as_python['_id']).one()
+        for attr in ['title', 'isbn',]:
+            setattr(evaluation, attr, monograph_as_python[attr])
+
+        request.rel_db_session.add(evaluation)
+        try:
+            request.rel_db_session.commit()
+        except IntegrityError:
+            request.rel_db_session.rollback()
+
+
         request.session.flash(_('Successfully updated.'))
 
         return HTTPFound(location=request.route_path('staff.book_details', sbid=monograph._id))
@@ -287,7 +299,7 @@ def book_details(request):
             file_url = request.route_path('staff.evaluation_attachments',
                                           sbid=monograph._id,
                                           filename=getattr(monograph, attach[0])['filename'])
-            book_attachments.append({'url':file_url, 'text': attach[1]})
+            book_attachments.append({'url':file_url, 'text': attach[1], 'css_class': attach[0]})
 
     evaluation = request.rel_db_session.query(rel_models.Evaluation).filter_by(monograph_sbid=monograph._id).one()
 
@@ -308,6 +320,14 @@ def book_details(request):
                               ]
                           }
             }
+
+def book_details_evaluation(request):
+    details = book_details(request)
+    details['general_stuff']['breadcrumb'][0] = (_('Evaluation List'),
+        request.route_path('evaluation.books_list') + '?meet=' + str(details['evaluation'].meeting.date))
+    return details
+
+
 
 def evaluation_attachments(request):
     sbid = request.matchdict['sbid']
@@ -552,6 +572,7 @@ def new_book(request):
                               publisher=evaluation.publisher.name,
                               publisher_url=evaluation.publisher_catalog_url if evaluation.publisher_catalog_url else '',
                               visible=False,
+                              creation_date=str(evaluation.creation_date),
                               )
 
         evaluation.monograph_sbid = monograph._id
