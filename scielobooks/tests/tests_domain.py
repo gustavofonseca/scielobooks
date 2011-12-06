@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import unittest
-from domain import IndividualAuthor
-from domain import Chapter
-from domain import Book
+from scielobooks.domain import IndividualAuthor
+from scielobooks.domain import Chapter
+from scielobooks.domain import Book
 
 
 class testChapter(unittest.TestCase):
