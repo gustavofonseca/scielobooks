@@ -1,0 +1,119 @@
+{
+   "_id": "w2",
+   "_rev": "10-624cf1c684abe61288cee55baac33284",
+   "isbn": "9788523204716",
+   "pdf_file": {
+       "uid": "pdfuid",
+       "filename": "arg_tra_cal_full.pdf"
+   },
+   "collection": [
+       [
+           "individual_author",
+           null
+       ],
+       [
+           "corporate_author",
+           null
+       ],
+       [
+           "title",
+           null
+       ],
+       [
+           "english_translated_title",
+           null
+       ],
+       [
+           "total_number_of_volumes",
+           null
+       ]
+   ],
+   "visible": true,
+   "use_licence": "CC BY-NC-SA 3.0",
+   "year": "2007",
+   "pages": "202",
+   "creators": [
+       [
+           [
+               "role",
+               "individual_author"
+           ],
+           [
+               "full_name",
+               "Santiago, Cybèle Celestino"
+           ],
+           [
+               "link_resume",
+               null
+           ]
+       ]
+   ],
+   "publisher": "EDUFBA",
+   "cover_thumbnail": {
+       "uid": "",
+       "filename": "cover.jpg.thumb.jpeg"
+   },
+   "language": "pt",
+   "title": "Argamassas tradicionais de cal",
+   "country": "BR",
+   "format": [
+       [
+           "height",
+           null
+       ],
+       [
+           "width",
+           null
+       ]
+   ],
+   "cover": {
+       "uid": "coveruid",
+       "filename": "cover.jpg"
+   },
+   "synopsis": "O livro faz uma retrospectiva sobre o que se pensava das argamassas de cal e alguns de seus constituintes ao longo dos séculos. Revela informações úteis tanto do ponto de vista histórico quanto para subsidiar obras de restauração através da análise de textos italianos, franceses, portugueses, espanhóis e brasileiros. É uma viagem no tempo, mostrando aspectos ligados à composição, ao preparo e às propriedades das argamassas elaboradas com esse aglomerante comentados à luz da ciência contemporânea.",
+   "TYPE": "Monograph",
+   "serie": [
+       [
+           "title",
+           null
+       ],
+       [
+           "issue",
+           null
+       ],
+       [
+           "issue_number",
+           null
+       ],
+       [
+           "issn",
+           null
+       ]
+   ],
+   "_attachments": {
+       "arg_tra_cal_full.pdf": {
+           "content_type": "application/pdf",
+           "revpos": 6,
+           "length": 8339195,
+           "stub": true
+       },
+       "cover.jpg": {
+           "content_type": "image/jpeg",
+           "revpos": 3,
+           "length": 627562,
+           "stub": true
+       },
+       "cover.jpg.thumb.jpeg": {
+           "content_type": "image/jpeg",
+           "revpos": 4,
+           "length": 3247,
+           "stub": true
+       },
+       "fulltext.pdf": {
+           "content_type": "application/pdf",
+           "revpos": 2,
+           "length": 8296788,
+           "stub": true
+       }
+   }
+}
