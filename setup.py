@@ -1,7 +1,10 @@
 import os
 import sys
 from setuptools import setup, find_packages
-from scielobooks import APP_VERSION
+try:
+    from scielobooks import APP_VERSION
+except ImportError:
+    APP_VERSION = ''
 
 
 if sys.version_info[:2] != (2, 7):
@@ -14,25 +17,7 @@ try:
 except IOError:
     README = CHANGES = ''
 
-requires = [
-    'pyramid<=1.0',
-    'WebError',
-    'Babel',
-    'pyramid_zcml',
-    'colander',
-    'deform<=0.9.3',
-    'couchdbkit',
-    'PIL',
-    'isisdm',
-    'SQLAlchemy',
-    'pyramid_handlers',
-    'pycrypto',
-    'pyramid_mailer',
-    'couchapp',
-    'chameleon<1.999',
-    'psycopg2',
-    'setuptools-git',
-    ]
+requires = []
 
 setup(name = 'scielobooks',
       version = APP_VERSION,
@@ -46,7 +31,7 @@ setup(name = 'scielobooks',
         ],
       author = 'BIREME/OPAS/OMS',
       author_email = 'isisnbp-devel@listas.bireme.br',
-      url = 'http://reddes.bvsalud.org/projects/scielo-books',
+      url = 'http://github.com/bireme/scielobooks',
       keywords = 'web scielo scielobooks',
       packages = find_packages(),
       include_package_data = True,
@@ -66,5 +51,3 @@ setup(name = 'scielobooks',
         },
 
       )
-
-# ``setuptools-git`` in order to build packages based on git repositories.
