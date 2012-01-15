@@ -83,8 +83,34 @@ class testBook(unittest.TestCase):
 
     def test_duplicated_chapter(self):
         book = self.__basic_book()
-        chapter = self.__basic_chapter()
-        book.chapters.append(chapter)
-        book.chapters.append(chapter)
+        chapter1 = self.__basic_chapter()
+
+        book.chapters.append(chapter1)
+        book.chapters.append(chapter1)
 
         self.assertEqual(len(book.chapters), 1)
+
+    def test_updated_chapter(self):
+        book = self.__basic_book()
+        chapter1 = self.__basic_chapter()
+        book.chapters.append(chapter1)
+
+        self.assertEqual(len(book.chapters), 1)
+
+        chapter2 = chapter1
+        chapter2.title = 'Intermediate Topics'
+        book.chapters.append_or_update(chapter2)
+
+        self.assertEqual(len(book.chapters), 1)
+        self.assertTrue(book.chapters[0] is chapter2)
+
+    def test_unknown_attribute(self):
+        attrs = {'title': u'Gödel, Escher, Bach: An Eternal Golden Braid',
+                 'reversed_title': u'diarB nedloG lanretE nA :hcaB ,rehcsE ,ledöG',
+                 'isbn': '978-0465026562',
+                 'publisher': 'Basic Books',
+                 }
+        self.assertRaises(AttributeError, Book, **attrs)
+
+
+

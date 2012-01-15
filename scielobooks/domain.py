@@ -32,15 +32,29 @@ class Chapter(object):
 class Chapters(list):
     def append(self, item):
         """
+        Add only if the chapter does not exist.
+        """
+        if item in self:
+            return None
+        super(Chapters, self).append(item)
+
+    def append_or_update(self, item):
+        """
         If an item already exists, it replaces the existing item with
         the new one.
         """
         if item in self:
             index = self.index(item)
             del(self[index])
-        super(Chapters, self).append(item)
+        super(Chapters, self).insert(index, item)
 
 class Book(object):
+    __available_attrs = ('title', 'titles_translated', 'isbn', 'creators', 'publisher',
+        'publisher_url', 'language', 'synopsis', 'synopses_translated', 'publication_year',
+        'publication_city', 'publication_country', 'total_pages', 'primary_descriptor',
+        'primary_descriptors_translated', 'edition',
+                        )
+
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -57,6 +71,17 @@ class Book(object):
         for field in mandatory:
             if not hasattr(self, field):
                 raise TypeError('Missing attribute %s' % field)
+
+    def __setattr__(self, name, value):
+        """
+        Allows attribution only for the attributes referenced at __available_attrs
+        or the ones with the names mangled (private scope).
+        """
+        if name not in self.__available_attrs and not name.startswith(
+            '_{0}__'.format(self.__class__.__name__)):
+            raise AttributeError
+        super(Book, self).__setattr__(name, value)
+
 
     @property
     def chapters(self):

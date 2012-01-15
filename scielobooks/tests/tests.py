@@ -20,7 +20,7 @@ class DummyCouchDB(object):
     """
     def get(self, sbid):
         import json
-        return json.load(open('fakedoc-w2.json'))
+        return json.load(open(os.path.join(HERE_PATH, 'fakedoc-w2.json')))
 
     def view(self, *args, **kwargs):
         return []
