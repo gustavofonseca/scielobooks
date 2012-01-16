@@ -49,11 +49,11 @@ class Chapters(list):
         super(Chapters, self).insert(index, item)
 
 class Book(object):
-    __available_attrs = ('title', 'titles_translated', 'isbn', 'creators', 'publisher',
-        'publisher_url', 'language', 'synopsis', 'synopses_translated', 'publication_year',
-        'publication_city', 'publication_country', 'total_pages', 'primary_descriptor',
-        'primary_descriptors_translated', 'edition',
-                        )
+    __available_attrs = set(('title', 'titles_translated', 'isbn', 'creators', 'publisher',
+            'publisher_url', 'language', 'synopsis', 'synopses_translated', 'publication_year',
+            'publication_city', 'publication_country', 'total_pages', 'primary_descriptor',
+            'primary_descriptors_translated', 'edition',
+                            ))
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
