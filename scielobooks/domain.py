@@ -1,6 +1,12 @@
-#!/usr/bin/env python
 # encoding: utf-8
+import couchdbkit
+
+from scielobooks.staff import models as documental_models
+
+
 class Creator(object):
+
+
     def __init__(self, full_name, link_to_resume):
         self.full_name = full_name
         self.link_to_resume = link_to_resume
@@ -11,6 +17,8 @@ class IndividualAuthor(Creator):
 
 
 class Chapter(object):
+
+
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -48,19 +56,24 @@ class Chapters(list):
             del(self[index])
         super(Chapters, self).insert(index, item)
 
+
 class Book(object):
+
+
     __available_attrs = set(('title', 'titles_translated', 'isbn', 'creators', 'publisher',
             'publisher_url', 'language', 'synopsis', 'synopses_translated', 'publication_year',
             'publication_city', 'publication_country', 'total_pages', 'primary_descriptor',
             'primary_descriptors_translated', 'edition',
-                            ))
+    ))
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
             setattr(self, k, v)
 
         self.__chapters = Chapters()
-        self.__check_mandatory()
+
+    def validate(self):
+        return self.__check_mandatory()
 
     def __check_mandatory(self):
         """
@@ -86,3 +99,34 @@ class Book(object):
     @property
     def chapters(self):
         return self.__chapters
+
+
+class BookDbAdapter(object):
+    """
+    An adapter to handle domain and mapper objects integration.
+
+    Retains a ``request`` instance only to access configurations
+    and resource objects. Request attributes, GET POST or Cookies,
+    are ignored.
+
+    ``__attr_match`` holds the correspondence between Monograph and
+    Book objects attributes. The match is defined by::
+
+      (``Book attr``, ``Monograph attr``)
+    """
+    __attr_match = (('title', 'title'), ('titles_translated', 'translated_titles'),
+            ('isbn', 'isbn'), ('creators', 'creators'), ('publisher', 'publisher'),
+            ('publisher_url', 'publisher_url'), ('language', 'language'),
+            ('synopsis', 'synopsis'), ('synopses_translated', 'translated_synopses'),
+            ('publication_year', 'year'), ('publication_city', 'city'),
+            ('publication_country', 'country'), ('total_pages', 'pages'),
+            ('primary_descriptor', 'primary_descriptor'),
+            ('primary_descriptors_translated', 'translated_primary_descriptors'),
+            ('edition', 'edition'),
+    )
+
+    def __init__(self, request):
+        self.__request = request
+
+    def load(self, sbid):
+        self.monograph = documental_models.Monograph.get(self.__request.db, sbid)

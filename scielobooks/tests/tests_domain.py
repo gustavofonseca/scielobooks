@@ -1,12 +1,18 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import unittest
+
+from pyramid import testing
+
 from scielobooks.domain import IndividualAuthor
 from scielobooks.domain import Chapter
 from scielobooks.domain import Book
+from scielobooks.domain import BookDbAdapter
+from scielobooks.tests import tests
 
 
-class testChapter(unittest.TestCase):
+class ChapterTest(unittest.TestCase):
+
 
     def __basic_chapter(self):
         chapter = Chapter()
@@ -50,8 +56,8 @@ class testChapter(unittest.TestCase):
         self.assertEqual(unicode(chapter), u'Tópicos avançados')
 
 
+class BookTest(unittest.TestCase):
 
-class testBook(unittest.TestCase):
 
     def __basic_book(self):
         attrs = {'title': u'Gödel, Escher, Bach: An Eternal Golden Braid',
@@ -104,6 +110,16 @@ class testBook(unittest.TestCase):
         self.assertEqual(len(book.chapters), 1)
         self.assertTrue(book.chapters[0] is chapter2)
 
+    def test_missing_mandatory_attribute(self):
+        """
+        Missing a mandatory attribute
+        """
+        attrs = {'isbn': '978-0465026562',
+                 'publisher': 'Basic Books',
+                 }
+        book = Book(**attrs)
+        self.assertRaises(TypeError, book.validate)
+
     def test_unknown_attribute(self):
         attrs = {'title': u'Gödel, Escher, Bach: An Eternal Golden Braid',
                  'reversed_title': u'diarB nedloG lanretE nA :hcaB ,rehcsE ,ledöG',
@@ -113,4 +129,27 @@ class testBook(unittest.TestCase):
         self.assertRaises(AttributeError, Book, **attrs)
 
 
+class BookDbAdapterTest(unittest.TestCase):
+
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    # def test_load(self):
+    #     request = testing.DummyRequest()
+    #     request.matchdict['sbid'] = 'w2'
+    #     request.db = tests._get_fresh_db()
+
+    #     db_adapter = BookDbAdapter(request)
+    #     book = db_adapter.load(request.matchdict['sbid'])
+
+    #     self.assertTrue(isinstance(book, Book))
+
+    # def test_struct_translator(self):
+    #     request = testing.DummyRequest()
+    #     db_adapter = BookDbAdapter(request)
+    #     db_adapter.__monograph_to_book_converter(tests_assets.w2_as_python)
 
