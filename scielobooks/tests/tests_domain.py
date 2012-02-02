@@ -149,14 +149,15 @@ class BookDbAdapterTest(unittest.TestCase):
 
     #     self.assertTrue(isinstance(book, Book))
 
-    def test_create_book_from_isisdm_missing_attr(self):
+    #tests for create_book_from_isisdm
+    def test_from_isisdm_missing_attr(self):
         request = testing.DummyRequest()
         db_adapter = BookDbAdapter(request)
 
         self.assertRaises(TypeError, db_adapter.create_book_from_isisdm, tests_assets.isisdm_should_fail)
 
 
-    def test_create_book_from_isisdm(self):
+    def test_from_isisdm_creators(self):
         request = testing.DummyRequest()
         db_adapter = BookDbAdapter(request)
 
@@ -166,4 +167,5 @@ class BookDbAdapterTest(unittest.TestCase):
         self.assertTrue(isinstance(book, Book))
         self.assertEqual(book.title, u'Argamassas tradicionais de cal')
         self.assertEqual(len(book.creators), 1)
+        self.assertTrue(isinstance(book.creators[0], IndividualAuthor))
         self.assertEqual(book.creators[0].full_name, u'Santiago, Cybèle Celestino')

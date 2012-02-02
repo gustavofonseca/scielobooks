@@ -143,6 +143,7 @@ class BookDbAdapter(object):
                 continue
 
             if isisdm_attr == 'creators':
+                #raises TypeError when try to construct with some attrs missing
                 creator_gen = (dict(creator) for creator in data[isisdm_attr])
                 for creator in creator_gen:
                     creator_attrs = {}
@@ -150,13 +151,14 @@ class BookDbAdapter(object):
                         creator_attrs['full_name'] = creator['full_name']
                     if creator.get('link_resume', None):
                         creator_attrs['link_to_resume'] = creator['link_resume']
-                    if creator['role'] == 'individual_author':
+
+                    if creator['role'] == 'individual_author': #instantiates the correct object
                         c = IndividualAuthor(**creator_attrs)
 
                     book.creators.append(c)
                 continue
 
-            setattr(book, domain_attr, data[isisdm_attr]) #simple attrs
+            setattr(book, domain_attr, data[isisdm_attr]) #simple cases
 
         return book
 
