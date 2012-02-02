@@ -71,6 +71,7 @@ class Book(object):
             setattr(self, k, v)
 
         self.__chapters = Chapters()
+        self.__creators = []
 
     def validate(self):
         return self.__check_mandatory()
@@ -99,6 +100,10 @@ class Book(object):
     @property
     def chapters(self):
         return self.__chapters
+
+    @property
+    def creators(self):
+        return self.__creators
 
 
 class BookDbAdapter(object):
@@ -130,3 +135,28 @@ class BookDbAdapter(object):
 
     def load(self, sbid):
         self.monograph = documental_models.Monograph.get(self.__request.db, sbid)
+
+    def create_book_from_isisdm(self, data):
+        book = Book()
+        for domain_attr, isisdm_attr in self.__attr_match:
+            if not data.has_key(isisdm_attr):
+                continue
+
+            if isisdm_attr == 'creators':
+                creator_gen = (dict(creator) for creator in data[isisdm_attr])
+                for creator in creator_gen:
+                    creator_attrs = {}
+                    if creator.get('full_name', None):
+                        creator_attrs['full_name'] = creator['full_name']
+                    if creator.get('link_resume', None):
+                        creator_attrs['link_to_resume'] = creator['link_resume']
+                    if creator['role'] == 'individual_author':
+                        c = IndividualAuthor(**creator_attrs)
+
+                    book.creators.append(c)
+                continue
+
+            setattr(book, domain_attr, data[isisdm_attr]) #simple attrs
+
+        return book
+

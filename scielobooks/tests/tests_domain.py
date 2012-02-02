@@ -9,6 +9,7 @@ from scielobooks.domain import Chapter
 from scielobooks.domain import Book
 from scielobooks.domain import BookDbAdapter
 from scielobooks.tests import tests
+from scielobooks.tests import tests_assets
 
 
 class ChapterTest(unittest.TestCase):
@@ -148,8 +149,21 @@ class BookDbAdapterTest(unittest.TestCase):
 
     #     self.assertTrue(isinstance(book, Book))
 
-    # def test_struct_translator(self):
-    #     request = testing.DummyRequest()
-    #     db_adapter = BookDbAdapter(request)
-    #     db_adapter.__monograph_to_book_converter(tests_assets.w2_as_python)
+    def test_create_book_from_isisdm_missing_attr(self):
+        request = testing.DummyRequest()
+        db_adapter = BookDbAdapter(request)
 
+        self.assertRaises(TypeError, db_adapter.create_book_from_isisdm, tests_assets.isisdm_should_fail)
+
+
+    def test_create_book_from_isisdm(self):
+        request = testing.DummyRequest()
+        db_adapter = BookDbAdapter(request)
+
+        #testing creators attr
+        book = db_adapter.create_book_from_isisdm(tests_assets.isisdm_should_work)
+
+        self.assertTrue(isinstance(book, Book))
+        self.assertEqual(book.title, u'Argamassas tradicionais de cal')
+        self.assertEqual(len(book.creators), 1)
+        self.assertEqual(book.creators[0].full_name, u'Santiago, Cybèle Celestino')
