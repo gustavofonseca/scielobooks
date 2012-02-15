@@ -154,7 +154,8 @@ class BookDbAdapter(object):
 
                     if creator['role'] == 'individual_author': #instantiates the correct object
                         c = IndividualAuthor(**creator_attrs)
-
+                    else:
+                        continue #we dont recognize the creator role
                     book.creators.append(c)
                 continue
 
