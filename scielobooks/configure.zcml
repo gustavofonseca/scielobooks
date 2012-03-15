@@ -321,4 +321,15 @@
     xhr="True"
     permission="admin"
   />
+<!--
+***************
+ API V1
+***************
+ -->
+  <route
+    name="api_v1.listing_books"
+    pattern="/api/v1/listings/books"
+    view="scielobooks.api.views.listing_books"
+    renderer="json"
+  />
 </configure>
