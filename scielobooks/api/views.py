@@ -1,12 +1,21 @@
 #coding: utf-8
+import copy
+
 from pyramid.response import Response
 import couchdbkit
 
 from ..staff.models import Monograph
 
 def listing_books(request, monograph=Monograph):
+    params = {}
+    params['offset'] = request.params.get('offset', 0)
+    params['limit'] = request.params.get('limit', 50)
+
     try:
-       books = request.db.view('scielobooks/visible_books', include_docs=True)
+       books = request.db.view('scielobooks/visible_books',
+                               include_docs=True,
+                               skip=params['offset'],
+                               limit=params['limit'])
     except couchdbkit.ResourceNotFound:
         raise exceptions.NotFound()
 
@@ -44,5 +53,5 @@ def listing_books(request, monograph=Monograph):
             }
         results.append(book_meta)
 
-    response = {'count': books.total_rows, 'params': {}, 'results': results}
+    response = {'count': books.total_rows, 'params': params, 'results': results}
     return response

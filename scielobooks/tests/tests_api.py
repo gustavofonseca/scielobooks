@@ -40,7 +40,6 @@ class BooksListingTests(unittest.TestCase):
         request.route_path = tests_api_assets.route_path
         response = listing_books(request, tests_api_assets.DummyMonograph)
         results = response['results']
-        self.assertTrue(isinstance(results, list))
 
         expected_book_meta = {
             'sbid': '329',
@@ -77,5 +76,15 @@ class BooksListingTests(unittest.TestCase):
             'cover_thumbnail_url': 'catalog.cover_thumbnail',
             }
         self.assertEqual(expected_book_meta, results[0])
+
+    def test_params(self):
+        from scielobooks.api.views import listing_books
+        import tests_api_assets
+        self.maxDiff = None
+        request = testing.DummyRequest()
+        request.db = tests_api_assets.DummyCouchdb()
+        request.route_path = tests_api_assets.route_path
+        response = listing_books(request, tests_api_assets.DummyMonograph)
+        self.assertEqual(response['params'], {'offset': 0, 'limit': 50})
 
 
